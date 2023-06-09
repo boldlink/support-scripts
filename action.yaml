@@ -10,5 +10,7 @@ inputs:
     required: true
 
 runs:
-  using: 'python'
+  using: 'docker'
+  image: 'python:3.9'
+  entrypoint: 'python'
   main: 'scripts/github_actions/variables_validate.py'
