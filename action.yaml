@@ -13,4 +13,5 @@ runs:
   using: 'docker'
   image: 'python:3.9'
   entrypoint: 'python'
-  main: 'scripts/github_actions/variables_validate.py'
+  args:
+    - 'scripts/github_actions/variables_validate.py'
