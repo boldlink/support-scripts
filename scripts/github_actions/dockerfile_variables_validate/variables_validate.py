@@ -7,7 +7,7 @@ dockerfile_path = os.getenv("DOCKERFILE_PATH", "")
 terraform_dir = os.getenv("TERRAFORM_DIR", "")
 
 # Get environment variables from Dockerfile
-with open(DOCKERFILE_PATH, "r") as dockerfile:
+with open(dockerfile_path, "r") as dockerfile:
     content = dockerfile.read()
     env_vars = re.findall(r"ENV\s+(\w+)", content)
 
@@ -15,7 +15,7 @@ with open(DOCKERFILE_PATH, "r") as dockerfile:
 missing_vars = {}
 
 # Iterate over env_vars.tf files
-for root, _, files in os.walk(TERRAFORM_DIR):
+for root, _, files in os.walk(terraform_dir):
     if "env_vars.tf" in files:
         env_vars_file_path = os.path.join(root, "env_vars.tf")
         except_file_path = os.path.join(root, "except.txt")
