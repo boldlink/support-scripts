@@ -2,14 +2,14 @@ import os
 import re
 import sys
 
-# Directory paths
-DOCKERFILE_PATH = ""
-TERRAFORM_DIR = ""
+# Get environment variables from GitHub environment
+dockerfile_path = os.getenv("DOCKERFILE_PATH", "")
+terraform_dir = os.getenv("TERRAFORM_DIR", "")
 
 # Get environment variables from Dockerfile
-with open(DOCKERFILE_PATH, 'r') as dockerfile:
+with open(DOCKERFILE_PATH, "r") as dockerfile:
     content = dockerfile.read()
-    env_vars = re.findall(r'ENV\s+(\w+)', content)
+    env_vars = re.findall(r"ENV\s+(\w+)", content)
 
 # Track missing variables and their corresponding files
 missing_vars = {}
@@ -22,11 +22,11 @@ for root, _, files in os.walk(TERRAFORM_DIR):
         except_vars = set()
 
         if os.path.exists(except_file_path):
-            with open(except_file_path, 'r') as except_file:
+            with open(except_file_path, "r") as except_file:
                 except_vars = set(except_file.read().splitlines())
 
         try:
-            with open(env_vars_file_path, 'r') as env_vars_file:
+            with open(env_vars_file_path, "r") as env_vars_file:
                 env_vars_content = env_vars_file.read()
 
             # Extract variable names from env_vars.tf

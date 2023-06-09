@@ -1,0 +1,14 @@
+name: Environment Variables Validate
+description: Validate environment variables against Dockerfile and env_vars.tf
+
+inputs:
+  dockerfile_path:
+    description: 'Path to the Dockerfile'
+    required: true
+  terraform_dir:
+    description: 'Path to the Terraform directory'
+    required: true
+
+runs:
+  using: 'python'
+  main: 'scripts/github_actions/variables_validate.py'
