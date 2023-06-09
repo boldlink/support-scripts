@@ -10,8 +10,16 @@ inputs:
     required: true
 
 runs:
-  using: 'docker'
-  image: 'docker://python:3.9'
-  entrypoint: 'python'
-  args:
-    - 'scripts/github_actions/dockerfile_variables_validate/variables_validate.py'
+  using: 'ubuntu-latest'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Run Variables Validate Script
+      run: |
+        python scripts/github_actions/dockerfile_variables_validate/variables_validate.py ${{ inputs.dockerfile_path }} ${{ inputs.terraform_dir }}
