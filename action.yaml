@@ -14,4 +14,4 @@ runs:
   image: 'docker://python:3.9'
   entrypoint: 'python'
   args:
-    - 'scripts/github_actions/dockerfile_variables_validate/variables_validate.py'
+    - '${{ github.workspace }}/scripts/github_actions/dockerfile_variables_validate/variables_validate.py'
