@@ -1,0 +1,25 @@
+name: Run Script
+
+on:
+  push:
+    branches:
+      - feature/environment-vars-validate
+  
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+
+      - name: Run Script
+        run: python ../../scripts/github_actions/dockerfile_variables_validate/variables_validate.py
+        env:
+          DOCKERFILE_PATH: ${{ env.DOCKERFILE_PATH }}
+          TERRAFORM_DIR: ${{ env.TERRAFORM_DIR }}
