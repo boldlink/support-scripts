@@ -18,7 +18,7 @@ runs:
   - uses: actions/checkout@v3
     with:
       repository: 'boldlink/support-scripts'
-      ref: 'feature/environment-vars-validate'
+      ref: 'main'
       path: 'support-scripts'
 
   - uses: actions/setup-python@v4
