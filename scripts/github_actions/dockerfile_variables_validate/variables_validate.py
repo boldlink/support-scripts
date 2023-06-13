@@ -1,6 +1,12 @@
 import os
 import re
 import sys
+import argparse
+
+# Add the following lines at the beginning of your script
+parser = argparse.ArgumentParser(description='Validate environment variables.')
+parser.add_argument('--except_file_name', type=str, help='Name of the exceptions file')
+args = parser.parse_args()
 
 # Get environment variables from GitHub environment
 dockerfile_path = os.getenv("DOCKERFILE_PATH", "")
@@ -18,7 +24,8 @@ missing_vars = {}
 for root, _, files in os.walk(terraform_dir):
     if "env_vars.tf" in files:
         env_vars_file_path = os.path.join(root, "env_vars.tf")
-        except_file_path = os.path.join(root, "except.txt")
+        except_file_path = os.path.join(root, args.except_file_name)
+
         except_vars = set()
 
         if os.path.exists(except_file_path):

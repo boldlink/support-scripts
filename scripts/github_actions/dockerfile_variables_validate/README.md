@@ -36,6 +36,7 @@ on:
 env:
   DOCKERFILE_PATH: "<path-to-your-dockerfile>"
   TERRAFORM_DIR: "<path-to-your-terraform-directory>"
+  EXCEPT_FILE_NAME: "my_except.txt"
   
 jobs:
   validate:
@@ -46,10 +47,11 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Run Environment Variables Validation
-        uses: boldlink/support-scripts/scripts/github_actions/dockerfile_variables_validate@main
+        uses: boldlink/support-scripts/scripts/github_actions/dockerfile_variables_validate/examples@main
         with:
           dockerfile_path: ${{ env.DOCKERFILE_PATH }}
           terraform_dir: ${{ env.TERRAFORM_DIR }}
+          except_file_name: ${{ env.EXCEPT_FILE_NAME }}
 ```
 
 Please ensure that `<path-to-your-dockerfile>` and `<path-to-your-terraform-directory>` are replaced with the actual paths to your Dockerfile and Terraform directory, respectively.
