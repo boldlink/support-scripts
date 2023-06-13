@@ -8,10 +8,7 @@ For the successful execution of this action, the following conditions must be me
 
 - **Common Dockerfile**: There should be a common Dockerfile located at a specific location. This location should be provided when running the workflow as **`DOCKERFILE_PATH`**.
 
-- **Terraform Configuration**: There should be a directory containing Terraform configuration files (`*.tf`). This directory might consist of various subdirectories, and it is expected that some of these subdirectories will contain `env_vars.tf` files.
-
-- **`Exception List`**: For each directory containing an `env_vars.tf` file, an `except.txt` file should be present. This text file should list any variables that are defined in the Dockerfile but not required during deployment.
-The location of the directory containing the Terraform configurations should be provided via the **`TERRAFORM_DIR`** variable in the workflow.
+- **Terraform Configuration**: There should be a directory containing Terraform configuration files (`*.tf`). This directory might consist of various subdirectories, and it is expected that some of these subdirectories will contain `env_vars.tf` files. The location of the directory containing the Terraform configurations should be provided via the **`TERRAFORM_DIR`** variable in the workflow.
 
 ### Script Arguments
 The script requires the following arguments for its execution:
@@ -20,7 +17,7 @@ The script requires the following arguments for its execution:
 
 2. **`--terraform_dir`**: The path to the directory containing Terraform configurations and environment variables to be validated. This argument is mandatory and is referred to as **`TERRAFORM_DIR`** within the example workflow section below in `Usage Example`.
 
-3. **`--exclude`**: List of variables to exclude from validation. In the example section below, this is provided by the environment variable called  **`EXCLUDED_VARS`**.
+3. **`--exclude`**: This is an optional argument containing a list of variables to exclude from validation. In the example section below, this is provided by the environment variable called  **`EXCLUDED_VARS`**. It is provided in the format `--exclude VAR1 VAR2 VAR3 VAR4 ...and so on`
 
 ### Running the script manually
 The script can be run with the following command on the linux terminal:
