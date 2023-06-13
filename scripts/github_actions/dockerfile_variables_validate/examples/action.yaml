@@ -27,6 +27,6 @@ runs:
       
   - name: Validate variables
     shell: "bash"
-    run: python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py ${{inputs.dockerfile_path}} ${{inputs.terraform_dir}} --except_file_name ${{inputs.except_file_name}}
+    run: python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ${{inputs.dockerfile_path}} --terraform_dir ${{inputs.terraform_dir}} --except_file_name ${{inputs.except_file_name}}
 
 

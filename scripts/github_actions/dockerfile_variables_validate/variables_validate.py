@@ -5,12 +5,14 @@ import argparse
 
 # Add the following lines at the beginning of your script
 parser = argparse.ArgumentParser(description='Validate environment variables.')
+parser.add_argument('--dockerfile_path', type=str, help='Path to the Dockerfile')
+parser.add_argument('--terraform_dir', type=str, help='Path to the Terraform directory')
 parser.add_argument('--except_file_name', type=str, help='Name of the exceptions file')
 args = parser.parse_args()
 
 # Get environment variables from GitHub environment
-dockerfile_path = os.getenv("DOCKERFILE_PATH", "")
-terraform_dir = os.getenv("TERRAFORM_DIR", "")
+dockerfile_path = args.dockerfile_path
+terraform_dir = args.terraform_dir
 
 # Get environment variables from Dockerfile
 with open(dockerfile_path, "r") as dockerfile:
