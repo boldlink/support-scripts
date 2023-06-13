@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Run Environment Variables Validation
-        uses: boldlink/support-scripts@main
+        uses: boldlink/support-scripts/scripts/github_actions/dockerfile_variables_validate@main
         with:
           dockerfile_path: ${{ env.DOCKERFILE_PATH }}
           terraform_dir: ${{ env.TERRAFORM_DIR }}
