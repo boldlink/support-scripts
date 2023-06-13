@@ -20,7 +20,7 @@ The action requires the following inputs for its execution:
 
 2. **`terraform_dir`**: The path to the directory containing Terraform configurations and environment variables to be validated. This input is mandatory and is referred to as **`TERRAFORM_DIR`** within the workflow.
 
-3. **`except_file_name`**: The path to the excemption/exception list file. This input is mandatory and is referred to as `**EXCEPT_FILE_NAME**`
+3. **`except_file_name`**: The path to the excemption/exception list file. This input is mandatory and is referred to as **`EXCEPT_FILE_NAME`**
 
 ### Usage Example
 To include the Environment Variables Validation Action in your workflow, add it as a step in your workflow file.
