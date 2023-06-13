@@ -1,4 +1,4 @@
-# Environment Variables Validation Action
+# Environment Variables Validation Script
 The Environment Variables Validation script is a robust way designed to validate environment variables. It cross-verifies variables defined in a Dockerfile against those used in Terraform files. Additionally, it also provides an exception mechanism through an `--exclude` argument, where variables that are defined in the Dockerfile but not required during deployment can be listed.
 
 This validation script plays a crucial role in ensuring the integrity and consistency of environment variables throughout the application lifecycle. If any discrepancies or missing variables are detected, the script will immediately trigger a workflow failure, prompting for necessary corrections. The underlying mechanism for execution is Python 3.11.
