@@ -1,10 +1,10 @@
 # Environment Variables Validation Action
-The Environment Variables Validation Action is a robust GitHub composite action designed to validate environment variables. It cross-verifies variables defined in a Dockerfile against those used in Terraform files. Additionally, it also provides an exception mechanism through an `except.txt` file, where variables that are defined in the Dockerfile but not required during deployment can be listed.
+The Environment Variables Validation script is a robust way designed to validate environment variables. It cross-verifies variables defined in a Dockerfile against those used in Terraform files. Additionally, it also provides an exception mechanism through an `--exclude` argument, where variables that are defined in the Dockerfile but not required during deployment can be listed.
 
-This validation action plays a crucial role in ensuring the integrity and consistency of environment variables throughout the application lifecycle. If any discrepancies or missing variables are detected, the action will immediately trigger a workflow failure, prompting for necessary corrections. The underlying mechanism for execution is Python 3.11.
+This validation script plays a crucial role in ensuring the integrity and consistency of environment variables throughout the application lifecycle. If any discrepancies or missing variables are detected, the script will immediately trigger a workflow failure, prompting for necessary corrections. The underlying mechanism for execution is Python 3.11.
 
 ## Prerequisites and Assumptions
-For the successful execution of this action, the following conditions must be met:
+For the successful execution of this script, the following conditions must be met:
 
 - **Common Dockerfile**: There should be a common Dockerfile located at a specific location. This location should be provided when running the workflow as **`DOCKERFILE_PATH`**.
 
@@ -26,7 +26,7 @@ python support-scripts/scripts/github_actions/dockerfile_variables_validate/vari
 ```
 
 ### Usage Example
-To include the Environment Variables Validation Action in your workflow, add it as a step in your workflow file.
+To include the Environment Variables Validation script in your workflow, add it as a step in your workflow file as shown below.
 ```yaml
 name: env variables validate
 
@@ -48,6 +48,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v3
+      
       - name: Checkout Script Repository
         uses: actions/checkout@v3
         with:
