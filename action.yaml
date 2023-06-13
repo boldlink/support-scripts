@@ -24,4 +24,4 @@ runs:
       
   - name: Validate variables
     shell: "bash"
-    run: python scripts/github_actions/dockerfile_variables_validate/variables_validate.py ${{inputs.dockerfile_path}} ${{inputs.terraform_dir}}
+    run: python $GITHUB_WORKSPACE/scripts/github_actions/dockerfile_variables_validate/variables_validate.py ${{inputs.dockerfile_path}} ${{inputs.terraform_dir}}
