@@ -16,8 +16,8 @@ runs:
     with:
       repository: 'boldlink/support-scripts'
       ref: 'feature/environment-vars-validate'
+      path: 'support-scripts'
 
-      
   - uses: actions/setup-python@v4
     with:
       python-version: '3.11'
