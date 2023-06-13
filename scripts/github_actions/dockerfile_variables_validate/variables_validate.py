@@ -3,14 +3,14 @@ import re
 import sys
 import argparse
 
-# Add the following lines at the beginning of your script
+# Argument parser for command-line arguments
 parser = argparse.ArgumentParser(description='Validate environment variables.')
-parser.add_argument('--dockerfile_path', type=str, help='Path to the Dockerfile')
-parser.add_argument('--terraform_dir', type=str, help='Path to the Terraform directory')
-parser.add_argument('--except_file_name', type=str, help='Name of the exceptions file')
+parser.add_argument('--dockerfile_path', type=str, required=True, help='Path to the Dockerfile')
+parser.add_argument('--terraform_dir', type=str, required=True, help='Path to the Terraform directory')
+parser.add_argument('--exclude', nargs='+', help='List of environment variables to exclude')
 args = parser.parse_args()
 
-# Get environment variables from GitHub environment
+# Get environment variables from arguments
 dockerfile_path = args.dockerfile_path
 terraform_dir = args.terraform_dir
 
@@ -19,6 +19,9 @@ with open(dockerfile_path, "r") as dockerfile:
     content = dockerfile.read()
     env_vars = re.findall(r"ENV\s+(\w+)", content)
 
+# Convert exclude list to set
+except_vars = set(args.exclude if args.exclude else [])
+
 # Track missing variables and their corresponding files
 missing_vars = {}
 
@@ -26,13 +29,6 @@ missing_vars = {}
 for root, _, files in os.walk(terraform_dir):
     if "env_vars.tf" in files:
         env_vars_file_path = os.path.join(root, "env_vars.tf")
-        except_file_path = os.path.join(root, args.except_file_name)
-
-        except_vars = set()
-
-        if os.path.exists(except_file_path):
-            with open(except_file_path, "r") as except_file:
-                except_vars = set(except_file.read().splitlines())
 
         try:
             with open(env_vars_file_path, "r") as env_vars_file:
@@ -59,5 +55,5 @@ if missing_vars:
         print(f"Missing Variables: {', '.join(vars)}\n")
     sys.exit(1)
 else:
-    print("All environment variables are either used or listed in except.txt.")
+    print("All environment variables are either used or excluded.")
     sys.exit(0)

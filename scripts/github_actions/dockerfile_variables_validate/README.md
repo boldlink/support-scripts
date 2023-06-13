@@ -13,19 +13,25 @@ For the successful execution of this action, the following conditions must be me
 - **`Exception List`**: For each directory containing an `env_vars.tf` file, an `except.txt` file should be present. This text file should list any variables that are defined in the Dockerfile but not required during deployment.
 The location of the directory containing the Terraform configurations should be provided via the **`TERRAFORM_DIR`** variable in the workflow.
 
-### Inputs
-The action requires the following inputs for its execution:
+### Script Arguments
+The script requires the following arguments for its execution:
 
-1. **`dockerfile_path`**: The path to the Dockerfile containing the environment variables to be validated. This input is mandatory. It is referred to as **`DOCKERFILE_PATH`** within the workflow.
+1. **`--dockerfile_path`**: The path to the Dockerfile containing the environment variables to be validated. This argument is mandatory. It is referred to as **`DOCKERFILE_PATH`** within the example workflow section below in `Usage Example`.
 
-2. **`terraform_dir`**: The path to the directory containing Terraform configurations and environment variables to be validated. This input is mandatory and is referred to as **`TERRAFORM_DIR`** within the workflow.
+2. **`--terraform_dir`**: The path to the directory containing Terraform configurations and environment variables to be validated. This argument is mandatory and is referred to as **`TERRAFORM_DIR`** within the example workflow section below in `Usage Example`.
 
-3. **`except_file_name`**: The path to the excemption/exception list file. This input is mandatory and is referred to as **`EXCEPT_FILE_NAME`**
+3. **`--exclude`**: List of variables to exclude from validation. In the example section below, this is provided by the environment variable called  **`EXCLUDED_VARS`**.
+
+### Running the script manually
+The script can be run with the following command on the linux terminal:
+```
+python support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path <dockerfile_path_here> --terraform_dir <terraform_dir_here> --exclude VAR1 VAR2 VAR3 VAR4...
+```
 
 ### Usage Example
 To include the Environment Variables Validation Action in your workflow, add it as a step in your workflow file.
 ```yaml
-name: Validate Environment Variables
+name: env variables validate
 
 on:
   push:
@@ -38,22 +44,27 @@ on:
 env:
   DOCKERFILE_PATH: "<path-to-your-dockerfile>"
   TERRAFORM_DIR: "<path-to-your-terraform-directory>"
-  EXCEPT_FILE_NAME: "<path-to-your-exception/exemption-file>"
+  EXCLUDED_VARS: USER UID APP_HOME
   
 jobs:
-  validate:
+  test-workflow:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Script Repository
         uses: actions/checkout@v3
-        
-      - name: Run Environment Variables Validation
-        uses: boldlink/support-scripts/scripts/github_actions/dockerfile_variables_validate/examples@main
         with:
-          dockerfile_path: ${{ env.DOCKERFILE_PATH }}
-          terraform_dir: ${{ env.TERRAFORM_DIR }}
-          except_file_name: ${{ env.EXCEPT_FILE_NAME }}
+          repository: 'boldlink/support-scripts'
+          ref: 'main'
+          path: 'support-scripts'
+          
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+                    
+      - name: Validate variables
+        run: python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ${{ env.DOCKERFILE_PATH }} --terraform_dir ${{ env.TERRAFORM_DIR }} --exclude ${{ env.EXCLUDED_VARS }}
 ```
 
 Please ensure that `<path-to-your-dockerfile>` and `<path-to-your-terraform-directory>` are replaced with the actual paths to your Dockerfile and Terraform directory, respectively.
