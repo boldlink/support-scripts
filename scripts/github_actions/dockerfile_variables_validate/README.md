@@ -16,11 +16,11 @@ The location of the directory containing the Terraform configurations should be 
 ### Inputs
 The action requires the following inputs for its execution:
 
-1. `**dockerfile_path**`: The path to the Dockerfile containing the environment variables to be validated. This input is mandatory. It is referred to as **`DOCKERFILE_PATH`** within the workflow.
+1. **`dockerfile_path`**: The path to the Dockerfile containing the environment variables to be validated. This input is mandatory. It is referred to as **`DOCKERFILE_PATH`** within the workflow.
 
-2. `**terraform_dir**`: The path to the directory containing Terraform configurations and environment variables to be validated. This input is mandatory and is referred to as **`TERRAFORM_DIR`** within the workflow.
+2. **`terraform_dir`**: The path to the directory containing Terraform configurations and environment variables to be validated. This input is mandatory and is referred to as **`TERRAFORM_DIR`** within the workflow.
 
-3. `**except_file_name**`: The path to the excemption/exception list file. This input is mandatory and is referred to as `**EXCEPT_FILE_NAME**`
+3. **`except_file_name`**: The path to the excemption/exception list file. This input is mandatory and is referred to as `**EXCEPT_FILE_NAME**`
 
 ### Usage Example
 To include the Environment Variables Validation Action in your workflow, add it as a step in your workflow file.
@@ -38,7 +38,7 @@ on:
 env:
   DOCKERFILE_PATH: "<path-to-your-dockerfile>"
   TERRAFORM_DIR: "<path-to-your-terraform-directory>"
-  EXCEPT_FILE_NAME: "my_except.txt"
+  EXCEPT_FILE_NAME: "<path-to-your-exception/exemption-file>"
   
 jobs:
   validate:
