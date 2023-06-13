@@ -10,8 +10,18 @@ inputs:
     required: true
 
 runs:
-  using: 'docker'
-  image: 'docker://python:3.9'
-  entrypoint: 'python'
-  args:
-    - '${{ github.workspace }}/scripts/github_actions/dockerfile_variables_validate/variables_validate.py'
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v3
+    with:
+      repository: 'boldlink/support-scripts'
+      ref: 'feature/environment-vars-validate'
+      path: 'scripts/github_actions/dockerfile_variables_validate'
+      
+  - uses: actions/setup-python@v4
+    with:
+      python-version: '3.11'
+      
+  - name: Validate variables
+    shell: "bash"
+    run: python scripts/github_actions/dockerfile_variables_validate/variables_validate.py ${{inputs.dockerfile_path}} ${{inputs.terraform_dir}}
