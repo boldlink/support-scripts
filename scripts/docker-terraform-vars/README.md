@@ -68,8 +68,8 @@ Missing Variables: VAR1
 ```console
 Run python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4
 [Error]: Missing environment variables in the following Terraform files:
-File: ./terraform/file_name.tf
-Missing Variables: VAR1
+[Error]: File: ./terraform/file_name.tf
+[Error]: Missing Variables: VAR1
 
 Error: Process completed with exit code 1.
 ```
