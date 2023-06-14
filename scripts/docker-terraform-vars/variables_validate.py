@@ -52,7 +52,7 @@ for root, dirs, files in os.walk(terraform_dir):
 
             # Check if each variable is used or missing in the .tf file
             for var in missing_vars.keys():
-                if var not in current_except_vars and re.search(r'\b' + re.escape(var) + r'\b', content) is None:
+                if var not in current_except_vars and not re.findall(r'"\s*{}\s*"'.format(var), content):
                     # Get relative subdirectory path
                     rel_subdir = os.path.relpath(root, terraform_dir)
                     if rel_subdir not in missing_vars[var]:
