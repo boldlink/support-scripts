@@ -29,6 +29,9 @@ except_vars = set(args.exclude if args.exclude else [])
 # Track missing variables and their corresponding files
 missing_vars = {}
 
+# A set to collect all variable names from all .tf files
+all_variable_names = set()
+
 # Iterate over all ".tf" files
 for root, dirs, files in os.walk(terraform_dir):
     tf_files = filter(lambda x: x.endswith('.tf'), files)
@@ -38,25 +41,22 @@ for root, dirs, files in os.walk(terraform_dir):
             with open(tf_file_path, "r") as tf_file_content:
                 content = tf_file_content.read()
 
-            # Extract variable names from .tf file
+            # Extract variable names from .tf file and add them to the set
             variable_names = re.findall(r'=\s+"(\w+)"', content)
-
-            # Check if each variable is used or missing in exclusion list
-            for var in env_vars:
-                if var not in variable_names and var not in except_vars:
-                    if tf_file_path not in missing_vars:
-                        missing_vars[tf_file_path] = []
-                    missing_vars[tf_file_path].append(var)
+            all_variable_names.update(variable_names)
 
         except FileNotFoundError:
             pass
 
-# Log missing variables and their corresponding files
+# Check if each variable is used or missing in the collected set
+for var in env_vars:
+    if var not in all_variable_names and var not in except_vars:
+        missing_vars[var] = True
+
+# Log missing variables
 if missing_vars:
-    logging.error("Missing environment variables in the following Terraform files:")
-    for file, vars in missing_vars.items():
-        logging.error(f"File: {file}")
-        logging.error(f"Missing Variables: {', '.join(vars)}\n")
+    logging.error("Missing environment variables in the Terraform files:")
+    logging.error(f"Missing Variables: {', '.join(missing_vars.keys())}\n")
     sys.exit(1)
 else:
     logging.info("All variables defined in Dockerfile have been used in deployment or are exempted.")
