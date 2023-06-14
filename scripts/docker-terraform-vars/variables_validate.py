@@ -45,11 +45,6 @@ for root, dirs, files in os.walk(terraform_dir):
             with open(tf_file_path, "r") as tf_file_content:
                 content = tf_file_content.read()
 
-            # Extract variable names from .tf file
-            #matched_groups = re.findall(r'name\s+=\s+"(\w+)"|\s+=\s+"(\w+)"|"(\w+)"', content)
-            #variable_names = [name for group in matched_groups for name in group if name is not None]
-            variable_names = re.findall(r'\b' + re.escape(var) + r'\b', content)
-
             # Determine excluded variables for this directory
             current_except_vars = except_vars
             if root in dir_specific_except_vars:
@@ -57,7 +52,7 @@ for root, dirs, files in os.walk(terraform_dir):
 
             # Check if each variable is used or missing in the .tf file
             for var in missing_vars.keys():
-                if var not in variable_names and var not in current_except_vars:
+                if re.search(r'\b' + re.escape(var) + r'\b', content) is None and var not in current_except_vars:
                     # Get relative subdirectory path
                     rel_subdir = os.path.relpath(root, terraform_dir)
                     if rel_subdir not in missing_vars[var]:
