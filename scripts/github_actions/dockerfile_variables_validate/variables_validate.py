@@ -55,5 +55,5 @@ if missing_vars:
         print(f"Missing Variables: {', '.join(vars)}\n")
     sys.exit(1)
 else:
-    print("All environment variables are either used or excluded.")
+    print("All variables defined in Dockerfile have been used in deployment or are exempted.")
     sys.exit(0)
