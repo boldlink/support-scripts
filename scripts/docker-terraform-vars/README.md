@@ -2,13 +2,15 @@
 
 This script is designed to validate environment variables of terraform ECS code by using the `Dockerfile` as the reference.
 
-Developers ofter struggle to ensure that all environment variables defined in a Dockerfile are used in the Terraform files. 
+Developers often struggle to ensure that all environment variables defined in a Dockerfile are used in the Terraform files. 
 
 This script is designed to solve this problem by validating the environment variables defined in a Dockerfile against those used in Terraform files. 
 
 Additionally, it also provides an exception mechanism through an `--exclude` argument, where variables that are defined in the Dockerfile but not required during deployment can be listed.
 
 **NOTE:** It only validates environment variables defined in the Dockerfile with `ENV` and not those defined in the Terraform files.
+
+**NOTE:** The script will NOT validate environment variables values. It will only validate the names of the variables.
 
 This validation script plays a crucial role in ensuring the integrity and consistency of environment variables throughout the application lifecycle. 
 
@@ -26,9 +28,11 @@ If any discrepancies or missing variables are detected, the script will immediat
 
 For the successful execution of this script, the following conditions must be met:
 
-- **Common Dockerfile**: There should be a common Dockerfile located at a specific location. This location should be provided when running the workflow as **`DOCKERFILE_PATH`**.
+- **Common Dockerfile**: There should be a common Dockerfile located at a specific location. This location should be provided when running the workflow as **`DOCKERFILE_PATH`** or `--dockerfile_path` argument.
 
-- **Terraform Configuration**: There should be a directory containing Terraform configuration files (`*.tf`). This directory might consist of various subdirectories, and it is expected that some of these subdirectories will contain `env_vars.tf` files. The location of the directory containing the Terraform configurations should be provided via the **`TERRAFORM_DIR`** variable in the workflow.
+- **Terraform Configuration**: There should be a directory containing Terraform configuration files (`*.tf`). This directory might consist of various subdirectories. 
+
+The location of the directory containing the Terraform configurations should be provided via the **`TERRAFORM_DIR`** variable in the workflow or `--terraform_dir` argument.
 
 ### Script Arguments
 The script requires the following arguments for its execution:
@@ -41,8 +45,9 @@ The script requires the following arguments for its execution:
 
 ### Running the script manually
 The script can be run with the following command on the linux terminal:
-```
-python support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path <dockerfile_path_here> --terraform_dir <terraform_dir_here> --exclude VAR1 VAR2 VAR3 VAR4...
+
+```console
+python support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path <dockerfile_path_here> --terraform_dir <terraform_dir_here> --exclude VAR1 VAR2 VAR3 VAR4...
 ```
 
 ### Script Output
@@ -52,7 +57,7 @@ python support-scripts/scripts/github_actions/dockerfile_variables_validate/vari
 
 #### Example of error output
 ```
-Missing environment variables in the following Terraform files:
+[Error]: Missing environment variables in the following Terraform files:
 File: ./terraform/file_name.tf
 Missing Variables: VAR1
 
@@ -61,12 +66,12 @@ Missing Variables: VAR1
 - When used in a github workflow, the following is the output when there is a missing variable:
 
 ```console
-Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4
+Run python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4
 ```
 
 - You will get the following output when there is a missing variable:
 ```
-Missing environment variables in the following Terraform files:
+[Error]: Missing environment variables in the following Terraform files:
 File: ./terraform/file_name.tf
 Missing Variables: VAR1
 
@@ -84,7 +89,7 @@ Error: Process completed with exit code 1.
 - When used in a github workflow, the following is the output when variables are used in deployment or have been exempted.
 
 ```console
-Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4 VAR1
+Run python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4 VAR1
 ```
 You will get the following output when all variables defined in Dockerfile have been used in deployment or are exempted.
 
@@ -133,7 +138,7 @@ jobs:
           python-version: '3.11'
                     
       - name: Validate variables
-        run: python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ${{ env.DOCKERFILE_PATH }} --terraform_dir ${{ env.TERRAFORM_DIR }} --exclude ${{ env.EXCLUDED_VARS }}
+        run: python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path ${{ env.DOCKERFILE_PATH }} --terraform_dir ${{ env.TERRAFORM_DIR }} --exclude ${{ env.EXCLUDED_VARS }}
 ```
 
 Please ensure that `<path-to-your-dockerfile>` and `<path-to-your-terraform-directory>` are replaced with the actual paths to your Dockerfile and Terraform directory, respectively.
