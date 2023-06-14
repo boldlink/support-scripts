@@ -56,7 +56,7 @@ python support-scripts/scripts/docker-terraform-vars/variables_validate.py --doc
 - When there are missing variables which have been defined in Dockerfile and which have not been used nor exempted using `--exclude` argument, the script will give the following output
 
 #### Example of error output
-```
+```console
 [Error]: Missing environment variables in the following Terraform files:
 File: ./terraform/file_name.tf
 Missing Variables: VAR1
@@ -75,7 +75,7 @@ Error: Process completed with exit code 1.
 ```
 
 - You will get the following output on the linux terminal when there is a missing variable:
-```
+```console
 [Error]: Missing environment variables in the following Terraform files:
 File: ./terraform/file_name.tf
 Missing Variables: VAR1
@@ -87,7 +87,7 @@ Error: Process completed with exit code 1.
 
 - When variables defined in Dockerfile have been used or exempted using the `--exclude` argument, the following is the output on the linux terminal
 
-```
+```console
 [Info]: All variables defined in Dockerfile have been used in deployment or are exempted.
 ```
 
