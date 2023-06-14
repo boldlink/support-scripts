@@ -39,4 +39,4 @@ process, involving the following steps:
   * Prepare fixes for all releases still under maintenance. These fixes
     will be released as fast as possible.
 
-#### BOLDLink-SIG 2022
+#### BOLDLink-SIG 2023
