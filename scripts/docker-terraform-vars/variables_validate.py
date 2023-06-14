@@ -66,7 +66,7 @@ if any(missing_vars.values()):
     logging.error("Missing environment variables in the Terraform files:")
     for var, dirs in missing_vars.items():
         if dirs:
-            logging.error(f"Variable '{var}' is missing in directories: {', '.join(dirs)}\n")
+            logging.error(f"Variable '{var}' is missing in: {', '.join(dirs)}\n")
     sys.exit(1)
 else:
     logging.info("All variables defined in Dockerfile have been used in deployment or are exempted.")
