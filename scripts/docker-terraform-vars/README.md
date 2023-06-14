@@ -1,3 +1,5 @@
+[<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
+
 # Environment Variables Validation Script
 
 This script is designed to validate environment variables of terraform ECS code by using the `Dockerfile` as the reference.
@@ -101,3 +103,5 @@ Run python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/varia
 ## Usage Example in Github Workflow
 
 See example [here](./examples/github_actions/validate_env_vars.yml) for usage in github workflow.
+
+#### BOLDLink-SIG 2023
