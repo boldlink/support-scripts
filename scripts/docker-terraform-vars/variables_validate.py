@@ -41,7 +41,7 @@ for root, dirs, files in os.walk(terraform_dir):
             # Extract variable names from .tf file
             variable_names = re.findall(r'=\s+"(\w+)"', content)
 
-            # Check if each variable is used or missing in except.txt
+            # Check if each variable is used or missing in exclusion list
             for var in env_vars:
                 if var not in variable_names and var not in except_vars:
                     if tf_file_path not in missing_vars:
