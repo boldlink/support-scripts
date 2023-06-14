@@ -46,7 +46,8 @@ for root, dirs, files in os.walk(terraform_dir):
                 content = tf_file_content.read()
 
             # Extract variable names from .tf file
-            variable_names = re.findall(r'name\s+=\s+"(\w+)"|\s+=\s+\'(\w+)\'', content)
+            matched_groups = re.findall(r'name\s+=\s+"(\w+)"|\s+=\s+\'(\w+)\'', content)
+            variable_names = [name for group in matched_groups for name in group if name is not None]
 
             # Determine excluded variables for this directory
             current_except_vars = except_vars
