@@ -56,7 +56,7 @@ All variables defined in Dockerfile have been used in deployment or are exempted
 
 ```
 
-### Usage Example
+### Usage Example in Github Workflow
 To include the Environment Variables Validation script in your workflow, add it as a step in your workflow file as shown below.
 ```yaml
 name: env variables validate
