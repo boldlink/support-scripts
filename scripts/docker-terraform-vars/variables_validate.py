@@ -56,7 +56,10 @@ for root, dirs, files in os.walk(terraform_dir):
             # Check if each variable is used or missing in the .tf file
             for var in missing_vars.keys():
                 if var not in variable_names and var not in current_except_vars:
-                    missing_vars[var].append(tf_file_path)
+                    # Get relative subdirectory path
+                    rel_subdir = os.path.relpath(root, terraform_dir)
+                    if rel_subdir not in missing_vars[var]:
+                        missing_vars[var].append(rel_subdir)
 
         except FileNotFoundError:
             pass
@@ -66,7 +69,7 @@ if any(missing_vars.values()):
     logging.error("Missing environment variables in the Terraform files:")
     for var, dirs in missing_vars.items():
         if dirs:
-            logging.error(f"Variable '{var}' is missing in: {', '.join(dirs)}\n")
+            logging.error(f"Variable '{var}' is missing in directories: {', '.join(dirs)}\n")
     sys.exit(1)
 else:
     logging.info("All variables defined in Dockerfile have been used in deployment or are exempted.")
