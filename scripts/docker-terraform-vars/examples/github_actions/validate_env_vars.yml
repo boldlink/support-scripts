@@ -1,4 +1,4 @@
-name: validate env variables
+name: validate Dockerfile vs Terraform env variables
 
 on:
   push:
@@ -33,5 +33,9 @@ jobs:
         with:
           python-version: '3.11'
                     
-      - name: Run validation Script
-        run: python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ${{ env.DOCKERFILE_PATH }} --terraform_dir ${{ env.TERRAFORM_DIR }} --exclude ${{ env.EXCLUDED_VARS }}
+      - name: Run ENV validation Script
+        run: |
+          python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/variables_validate.py \
+          --dockerfile_path ${{ env.DOCKERFILE_PATH }} \
+          --terraform_dir ${{ env.TERRAFORM_DIR }} \
+          --exclude ${{ env.EXCLUDED_VARS }}
