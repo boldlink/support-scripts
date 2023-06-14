@@ -26,7 +26,7 @@ python support-scripts/scripts/github_actions/dockerfile_variables_validate/vari
 ```
 
 ### Script Output
-1. When a variable is defined in Dockerfile and not used nor exempted
+1. **When a variable is defined in Dockerfile and not used nor exempted**
 
 - When there are missing variables which have been defined in Dockerfile and which have not been used nor exempted using `--exclude` argument, the script will give the following output
 ```
@@ -46,7 +46,7 @@ Missing Variables: VAR1
 Error: Process completed with exit code 1.
 ```
 
-2. When all variables defined in Dockerfile have been used or exempted
+2. **When all variables defined in Dockerfile have been used or exempted**
 
 - When variables defined in Dockerfile have been used or exempted using the `--exclude` argument, the following is the output
 ```
@@ -56,7 +56,6 @@ All variables defined in Dockerfile have been used in deployment or are exempted
 When used in a github workflow, the following is the output when variables are used in deployment or have been exempted.
 ```
 Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4 VAR1
-Missing environment variables in the following Terraform files:
 All variables defined in Dockerfile have been used in deployment or are exempted.
 
 ```
