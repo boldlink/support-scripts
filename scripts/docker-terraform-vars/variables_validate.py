@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import argparse
+import json
 import logging
 
 # Initialize logging
@@ -12,6 +13,7 @@ parser = argparse.ArgumentParser(description='Validate environment variables.')
 parser.add_argument('--dockerfile_path', type=str, required=True, help='Path to the Dockerfile')
 parser.add_argument('--terraform_dir', type=str, required=True, help='Path to the Terraform directory')
 parser.add_argument('--exclude', nargs='+', default=[], help='List of environment variables to exclude')
+parser.add_argument('--exclude_json', type=str, help='JSON string of directory-specific excluded variables')
 args = parser.parse_args()
 
 # Get environment variables from arguments
@@ -25,6 +27,11 @@ with open(dockerfile_path, "r") as dockerfile:
 
 # Convert exclude list to set
 except_vars = set(args.exclude if args.exclude else [])
+
+# Load directory-specific excluded variables, if provided
+dir_specific_except_vars = {}
+if args.exclude_json:
+    dir_specific_except_vars = json.loads(args.exclude_json)
 
 # Track missing variables and their corresponding directories
 missing_vars = {var: [] for var in env_vars if var not in except_vars}
@@ -41,9 +48,14 @@ for root, dirs, files in os.walk(terraform_dir):
             # Extract variable names from .tf file
             variable_names = re.findall(r'=\s+"(\w+)"', content)
 
+            # Determine excluded variables for this directory
+            current_except_vars = except_vars
+            if root in dir_specific_except_vars:
+                current_except_vars = current_except_vars.union(dir_specific_except_vars[root])
+
             # Check if each variable is used or missing in the .tf file
             for var in missing_vars.keys():
-                if var not in variable_names:
+                if var not in variable_names and var not in current_except_vars:
                     missing_vars[var].append(tf_file_path)
 
         except FileNotFoundError:
