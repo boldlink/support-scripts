@@ -100,45 +100,4 @@ You will get the following output when all variables defined in Dockerfile have 
 
 ## Usage Example in Github Workflow
 
-To include the Environment Variables Validation script in your workflow, add it as a step in your workflow file as shown below.
-```yaml
-name: env variables validate
-
-on:
-  push:
-    branches:
-      - 'feature/*'
-      - 'features/*'
-      - 'release/*'
-      - 'releases/*'
-
-env:
-  DOCKERFILE_PATH: "<path-to-your-dockerfile>"
-  TERRAFORM_DIR: "<path-to-your-terraform-directory>"
-  EXCLUDED_VARS: USER UID APP_HOME
-  
-jobs:
-  test-workflow:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout current repository
-        uses: actions/checkout@v3
-      
-      - name: Checkout Script Repository
-        uses: actions/checkout@v3
-        with:
-          repository: 'boldlink/support-scripts'
-          ref: 'main'
-          path: 'support-scripts'
-          
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.11'
-                    
-      - name: Validate variables
-        run: python $GITHUB_WORKSPACE/support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path ${{ env.DOCKERFILE_PATH }} --terraform_dir ${{ env.TERRAFORM_DIR }} --exclude ${{ env.EXCLUDED_VARS }}
-```
-
-Please ensure that `<path-to-your-dockerfile>` and `<path-to-your-terraform-directory>` are replaced with the actual paths to your Dockerfile and Terraform directory, respectively.
+See example [here](./examples/github_actions/validate_env_vars.yml) for usage in github workflow.

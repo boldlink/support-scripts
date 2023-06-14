@@ -1,0 +1,37 @@
+name: validate env variables
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'features/*'
+      - 'release/*'
+      - 'releases/*'
+
+env:
+  DOCKERFILE_PATH: "./Dockerfile"
+  TERRAFORM_DIR: "./terraform/"
+  EXCLUDED_VARS: USER UID APP_HOME
+  
+jobs:
+  test-workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v3
+      
+      - name: Checkout Script Repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'boldlink/support-scripts'
+          ref: 'main'
+          path: 'support-scripts'
+          
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+                    
+      - name: Run validation Script
+        run: python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ${{ env.DOCKERFILE_PATH }} --terraform_dir ${{ env.TERRAFORM_DIR }} --exclude ${{ env.EXCLUDED_VARS }}
