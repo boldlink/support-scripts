@@ -25,6 +25,37 @@ The script can be run with the following command on the linux terminal:
 python support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path <dockerfile_path_here> --terraform_dir <terraform_dir_here> --exclude VAR1 VAR2 VAR3 VAR4...
 ```
 
+### Script Output
+- When there are missing variables which have been defined in Dockerfile and which have not been used nor exempted using `--exclude` argument, the script will give the following output
+```
+Missing environment variables in the following Terraform files:
+File: ./terraform/file_name.tf
+Missing Variables: VAR1
+
+```
+
+When used in a github workflow, the following is the output when there is a missing variable
+```
+Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4
+Missing environment variables in the following Terraform files:
+File: ./terraform/file_name.tf
+Missing Variables: VAR1
+
+Error: Process completed with exit code 1.
+```
+- When variables defined in Dockerfile have been used or exempted using the `--exclude` argument, the following is the output
+```
+All variables defined in Dockerfile have been used in deployment or are exempted.
+```
+
+When used in a github workflow, the following is the output when variables are used in deployment or have been exempted.
+```
+Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4 VAR1
+Missing environment variables in the following Terraform files:
+All variables defined in Dockerfile have been used in deployment or are exempted.
+
+```
+
 ### Usage Example
 To include the Environment Variables Validation script in your workflow, add it as a step in your workflow file as shown below.
 ```yaml
