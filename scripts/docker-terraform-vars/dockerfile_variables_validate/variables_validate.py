@@ -49,11 +49,11 @@ for root, _, files in os.walk(terraform_dir):
 
 # Display missing variables and their corresponding files
 if missing_vars:
-    print("Missing environment variables in the following Terraform files:")
+    print("[Error]: Missing environment variables in the following Terraform files:")
     for file, vars in missing_vars.items():
         print(f"File: {file}")
         print(f"Missing Variables: {', '.join(vars)}\n")
     sys.exit(1)
 else:
-    print("All variables defined in Dockerfile have been used in deployment or are exempted.")
+    print("[Info]: All variables defined in Dockerfile have been used in deployment or are exempted.")
     sys.exit(0)

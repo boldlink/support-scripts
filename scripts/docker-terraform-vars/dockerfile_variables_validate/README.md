@@ -1,9 +1,29 @@
 # Environment Variables Validation Script
-The Environment Variables Validation script is a robust way designed to validate environment variables. It cross-verifies variables defined in a Dockerfile against those used in Terraform files. Additionally, it also provides an exception mechanism through an `--exclude` argument, where variables that are defined in the Dockerfile but not required during deployment can be listed.
 
-This validation script plays a crucial role in ensuring the integrity and consistency of environment variables throughout the application lifecycle. If any discrepancies or missing variables are detected, the script will immediately trigger a workflow failure, prompting for necessary corrections. The underlying mechanism for execution is Python 3.11.
+This script is designed to validate environment variables of terraform ECS code by using the `Dockerfile` as the reference.
+
+Developers ofter struggle to ensure that all environment variables defined in a Dockerfile are used in the Terraform files. 
+
+This script is designed to solve this problem by validating the environment variables defined in a Dockerfile against those used in Terraform files. 
+
+Additionally, it also provides an exception mechanism through an `--exclude` argument, where variables that are defined in the Dockerfile but not required during deployment can be listed.
+
+**NOTE:** It only validates environment variables defined in the Dockerfile with `ENV` and not those defined in the Terraform files.
+
+This validation script plays a crucial role in ensuring the integrity and consistency of environment variables throughout the application lifecycle. 
+
+## Ideal Use Case
+
+This validation ideally will be implemented as a step in a CI/CD pipeline, where it will be executed before the deployment of the application, see example [here](./examples/github_actions/validate_env_vars.yml).
+
+If any discrepancies or missing variables are detected, the script will immediately trigger a workflow failure, prompting for necessary corrections. 
+
+## Requirements
+
+* Python 3.11 or higher.
 
 ## Prerequisites and Assumptions
+
 For the successful execution of this script, the following conditions must be met:
 
 - **Common Dockerfile**: There should be a common Dockerfile located at a specific location. This location should be provided when running the workflow as **`DOCKERFILE_PATH`**.
@@ -29,6 +49,8 @@ python support-scripts/scripts/github_actions/dockerfile_variables_validate/vari
 1. **When a variable is defined in Dockerfile and not used nor exempted**
 
 - When there are missing variables which have been defined in Dockerfile and which have not been used nor exempted using `--exclude` argument, the script will give the following output
+
+#### Example of error output
 ```
 Missing environment variables in the following Terraform files:
 File: ./terraform/file_name.tf
@@ -36,9 +58,14 @@ Missing Variables: VAR1
 
 ```
 
-When used in a github workflow, the following is the output when there is a missing variable
-```
+- When used in a github workflow, the following is the output when there is a missing variable:
+
+```console
 Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4
+```
+
+- You will get the following output when there is a missing variable:
+```
 Missing environment variables in the following Terraform files:
 File: ./terraform/file_name.tf
 Missing Variables: VAR1
@@ -49,18 +76,25 @@ Error: Process completed with exit code 1.
 2. **When all variables defined in Dockerfile have been used or exempted**
 
 - When variables defined in Dockerfile have been used or exempted using the `--exclude` argument, the following is the output
+
 ```
-All variables defined in Dockerfile have been used in deployment or are exempted.
+[Info]: All variables defined in Dockerfile have been used in deployment or are exempted.
 ```
 
-When used in a github workflow, the following is the output when variables are used in deployment or have been exempted.
-```
+- When used in a github workflow, the following is the output when variables are used in deployment or have been exempted.
+
+```console
 Run python $GITHUB_WORKSPACE/support-scripts/scripts/github_actions/dockerfile_variables_validate/variables_validate.py --dockerfile_path ./Dockerfile --terraform_dir ./terraform/ --exclude VAR3 VAR2 VAR4 VAR1
-All variables defined in Dockerfile have been used in deployment or are exempted.
+```
+You will get the following output when all variables defined in Dockerfile have been used in deployment or are exempted.
+
+```
+[Info]: All variables defined in Dockerfile have been used in deployment or are exempted.
 
 ```
 
-### Usage Example in Github Workflow
+## Usage Example in Github Workflow
+
 To include the Environment Variables Validation script in your workflow, add it as a step in your workflow file as shown below.
 ```yaml
 name: env variables validate
