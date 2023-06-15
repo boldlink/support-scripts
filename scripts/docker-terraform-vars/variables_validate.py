@@ -31,25 +31,29 @@ missing_vars = {}
 
 # Iterate over all ".tf" files
 for root, dirs, files in os.walk(terraform_dir):
-    tf_files = filter(lambda x: x.endswith('.tf'), files)
-    for tf_file in tf_files:
-        tf_file_path = os.path.join(root, tf_file)
-        try:
-            with open(tf_file_path, "r") as tf_file_content:
-                content = tf_file_content.read()
+    tf_files = list(filter(lambda x: x.endswith('.tf'), files))
+    
+    for var in env_vars:
+        if var not in except_vars:
+            variable_missing_files = []
+            for tf_file in tf_files:
+                tf_file_path = os.path.join(root, tf_file)
+                try:
+                    with open(tf_file_path, "r") as tf_file_content:
+                        content = tf_file_content.read()
+                    if re.findall(r'"\s*{}\s*"'.format(var), content):
+                        break
+                except FileNotFoundError:
+                    pass
+            else:
+                # If the variable was not found in any file, add all files to the missing variables list
+                variable_missing_files.extend(tf_files)
 
-            # Extract variable names from .tf file
-            variable_names = re.findall(r'=\s+"(\w+)"', content)
-
-            # Check if each variable is used or missing in exclusion list
-            for var in env_vars:
-                if var not in variable_names and var not in except_vars:
-                    if tf_file_path not in missing_vars:
-                        missing_vars[tf_file_path] = []
-                    missing_vars[tf_file_path].append(var)
-
-        except FileNotFoundError:
-            pass
+            for missing_file in variable_missing_files:
+                missing_file_path = os.path.join(root, missing_file)
+                if missing_file_path not in missing_vars:
+                    missing_vars[missing_file_path] = []
+                missing_vars[missing_file_path].append(var)
 
 # Log missing variables and their corresponding files
 if missing_vars:
