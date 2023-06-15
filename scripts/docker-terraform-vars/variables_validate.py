@@ -38,28 +38,35 @@ missing_vars = {var: [] for var in env_vars if var not in except_vars}
 
 # Iterate over all ".tf" files
 for root, dirs, files in os.walk(terraform_dir):
-    tf_files = filter(lambda x: x.endswith('.tf'), files)
-    for tf_file in tf_files:
-        tf_file_path = os.path.join(root, tf_file)
-        try:
-            with open(tf_file_path, "r") as tf_file_content:
-                content = tf_file_content.read()
+    tf_files = list(filter(lambda x: x.endswith('.tf'), files))
+    
+    for var in missing_vars.keys():
+        # Determine excluded variables for this directory
+        current_except_vars = except_vars
+        if root in dir_specific_except_vars:
+            current_except_vars = current_except_vars.union(dir_specific_except_vars[root])
+            
+        # Check if variable is used or missing in the .tf files
+        if var not in current_except_vars:
+            variable_used = False
+            for tf_file in tf_files:
+                tf_file_path = os.path.join(root, tf_file)
+                try:
+                    with open(tf_file_path, "r") as tf_file_content:
+                        content = tf_file_content.read()
+                        
+                    if re.findall(r'"\s*{}\s*"'.format(var), content):
+                        variable_used = True
+                        break
 
-            # Determine excluded variables for this directory
-            current_except_vars = except_vars
-            if root in dir_specific_except_vars:
-                current_except_vars = current_except_vars.union(dir_specific_except_vars[root])
-
-            # Check if each variable is used or missing in the .tf file
-            for var in missing_vars.keys():
-                if var not in current_except_vars and not re.findall(r'"\s*{}\s*"'.format(var), content):
-                    # Get relative subdirectory path
-                    rel_subdir = os.path.relpath(root, terraform_dir)
-                    if rel_subdir not in missing_vars[var]:
-                        missing_vars[var].append(rel_subdir)
-
-        except FileNotFoundError:
-            pass
+                except FileNotFoundError:
+                    pass
+                
+            if not variable_used:
+                # Get relative subdirectory path
+                rel_subdir = os.path.relpath(root, terraform_dir)
+                if rel_subdir not in missing_vars[var]:
+                    missing_vars[var].append(rel_subdir)
 
 # Log missing variables and their corresponding directories
 if any(missing_vars.values()):
