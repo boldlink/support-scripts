@@ -62,7 +62,10 @@ python3 support-scripts/scripts/docker-terraform-vars/variables_validate.py --do
 
 4. **Iterating Through Terraform Files:** The script then uses `os.walk` to traverse through the provided Terraform directory and all its subdirectories, and for each directory, it opens and reads every `.tf` file.
 
-5. **Checking for Variable Use:** For each environment variable, the script checks if it's used in any of the `.tf` files within a directory. If the variable is not found in any `.tf` file in a specific directory, the script adds it to a dictionary with the corresponding file paths where it's missing.
+5. **Checking for Variable Use:** For each environment variable, it checks if the variable is used in any of the `.tf` files. It does this by using the regex `"\s*{}\s*"`. This pattern matches the variable name (enclosed by quotes and possibly surrounded by whitespace characters). This regex is very flexible and can match the variable usage in multiple contexts within the Terraform files. Most importantly, it can locate the variables within the `environment = []` and `secrets = []` sections, but it is not limited to these sections only.
+
+**NOTE:**
+While the script can locate variables in most contexts, its efficiency depends on the syntax used in your `.tf` files. For example, it expects variables to be enclosed in quotes (like `"variable_name"`). If your `.tf` files use a different syntax, you might need to adjust the syntax.
 
 6. **Logging Missing Variables:** If any environment variables are missing in any Terraform files, the script logs the details of the missing variables along with their corresponding file paths. If no missing variables are found, it logs a success message.
 
