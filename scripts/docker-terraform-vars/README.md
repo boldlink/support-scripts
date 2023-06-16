@@ -64,7 +64,7 @@ python3 support-scripts/scripts/docker-terraform-vars/variables_validate.py --do
 
 5. **Checking for Variable Use:** For each environment variable, the script checks if it's used in any of the .tf files within a directory. If the variable is not found in any `.tf` file in a specific directory, the script adds it to a dictionary with the corresponding file paths where it's missing.
 
-6. **Logging Missing Variables: If any environment variables are missing in any Terraform files, the script logs the details of the missing variables along with their corresponding file paths. If no missing variables are found, it logs a success message.
+6. **Logging Missing Variables:** If any environment variables are missing in any Terraform files, the script logs the details of the missing variables along with their corresponding file paths. If no missing variables are found, it logs a success message.
 
 ### Script Output
 1. **When a variable is defined in Dockerfile and not used nor exempted**
