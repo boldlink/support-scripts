@@ -49,8 +49,22 @@ The script requires the following arguments for its execution:
 The script can be run with the following command on the linux terminal:
 
 ```console
-python support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path <dockerfile_path_here> --terraform_dir <terraform_dir_here> --exclude VAR1 VAR2 VAR3 VAR4...
+python3 support-scripts/scripts/docker-terraform-vars/variables_validate.py --dockerfile_path <dockerfile_path_here> --terraform_dir <terraform_dir_here> --exclude VAR1 VAR2 VAR3 VAR4...
 ```
+
+### Script Logic
+
+1. **Command-line Arguments:** The script accepts command-line arguments for the Dockerfile path and the Terraform directory path. Additionally, it accepts a list of environment variables to exclude from the check.
+
+2. **Extraction of Environment Variables:** The script opens the Dockerfile and uses regex to extract all environment variables.
+
+3. **Excluding Variables:** Any variables specified in the command-line arguments to be excluded are removed from the set of variables to be checked.
+
+4. **Iterating Through Terraform Files:** The script then uses `os.walk` to traverse through the provided Terraform directory and all its subdirectories, and for each directory, it opens and reads every `.tf` file.
+
+5. **Checking for Variable Use:** For each environment variable, the script checks if it's used in any of the .tf files within a directory. If the variable is not found in any `.tf` file in a specific directory, the script adds it to a dictionary with the corresponding file paths where it's missing.
+
+6. **Logging Missing Variables: If any environment variables are missing in any Terraform files, the script logs the details of the missing variables along with their corresponding file paths. If no missing variables are found, it logs a success message.
 
 ### Script Output
 1. **When a variable is defined in Dockerfile and not used nor exempted**
